@@ -4,8 +4,6 @@ import React from "react";
 
 type PropsT = {
   children: *,
-  css: string[],
-  scripts: string[],
   state: string,
   id: string
 };
@@ -18,21 +16,16 @@ export default class Wrapper extends React.Component<PropsT> {
   };
 
   render() {
-    const { children, scripts = [], css = [], state, id } = this.props;
+    const { children, state, id } = this.props;
     return (
       <div>
-        {css.map(href => {
-          return <link key={href} rel="stylesheet" href={urlPrefix + href} />;
-        })}
         <div id={id} dangerouslySetInnerHTML={{ __html: children }} />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.__PRELOADED_STATE__ = ${state}`
+            __html: `window.__PRELOADED_STATE__ = 
+                window.__PRELOADED_STATE__ ? Object.assign(window.__PRELOADED_STATE__,{${id}: ${state}}) : {${id}: ${state}}`
           }}
         />
-        {scripts.map(src => {
-          return <script key={src} src={urlPrefix + src} />;
-        })}
       </div>
     );
   }

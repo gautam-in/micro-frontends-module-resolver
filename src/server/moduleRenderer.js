@@ -1,31 +1,49 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
 
-import Wrapper from "../shared/components/Wrapper";
+import Wrapper from "./components/Wrapper";
 import resolver from "./moduleResolver";
 
-const urlPrefix =
-  process.env.NODE_ENV === "production" ? "http://localhost:8001" : "";
+const urlPrefix = "http://localhost:8002/shared";
 
-const serverRenderer = () => (req, res) => {
+const serverRenderer = () => async (req, res) => {
   const state = JSON.stringify(req.store.getState());
 
   const moduleName = req.path.split("/")[1];
+  const moduleNameLowerCase = moduleName.toLowerCase();
+
+  const css = [];
+  if (req.moduleManifest[moduleNameLowerCase + ".vendor.css"]) {
+    css.push(
+      urlPrefix + "/" + req.moduleManifest[moduleNameLowerCase + ".vendor.css"]
+    );
+  }
+
+  if (req.moduleManifest[moduleNameLowerCase + ".css"]) {
+    css.push(
+      urlPrefix + "/" + req.moduleManifest[moduleNameLowerCase + ".css"]
+    );
+  }
+
+  const js = [];
+  if (req.moduleManifest[moduleNameLowerCase + ".vendor.js"]) {
+    js.push(
+      urlPrefix + "/" + req.moduleManifest[moduleNameLowerCase + ".vendor.js"]
+    );
+  }
+
+  if (req.moduleManifest[moduleNameLowerCase + ".js"]) {
+    js.push(urlPrefix + "/" + req.moduleManifest[moduleNameLowerCase + ".js"]);
+  }
 
   return res.send({
     html: renderToString(
       <Wrapper state={state} id={moduleName}>
-        {resolver(req)}
+        {await resolver(req)}
       </Wrapper>
     ),
-    css: [
-      urlPrefix + res.locals.assetPath("vendor.css"),
-      urlPrefix + res.locals.assetPath(`${moduleName.toLowerCase()}.css`)
-    ],
-    js: [
-      urlPrefix + res.locals.assetPath("vendor.js"),
-      urlPrefix + res.locals.assetPath(`${moduleName.toLowerCase()}.js`)
-    ]
+    css,
+    js
   });
 };
 

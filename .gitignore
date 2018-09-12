@@ -3,7 +3,6 @@ node_modules_TMP
 logs/*.log
 /.vagrant
 .webpack-cache
-public
 npm-debug.log
 oauth-howto.txt
 compiled-css
@@ -15,3 +14,4 @@ coverage
 stuff
 build/*
 yarn-error.log
+.DS_STORE
