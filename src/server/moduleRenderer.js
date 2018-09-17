@@ -4,7 +4,7 @@ import { renderToString } from "react-dom/server";
 import Wrapper from "./components/Wrapper";
 import resolver from "./moduleResolver";
 
-const urlPrefix = "http://localhost:8002/shared";
+const urlPrefix = "/shared";
 
 const serverRenderer = () => async (req, res) => {
   const state = JSON.stringify(req.store.getState());
@@ -39,7 +39,7 @@ const serverRenderer = () => async (req, res) => {
   return res.send({
     html: renderToString(
       <Wrapper state={state} id={moduleName}>
-        {await resolver(req)}
+        {await resolver(req, moduleName)}
       </Wrapper>
     ),
     css,

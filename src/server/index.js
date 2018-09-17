@@ -19,6 +19,10 @@ app.use("/favicon.ico", (req, res) => {
 
 app.use(cors());
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
 app.use(bodyParser.json());
 
 app.use(async (req, res, next) => {
@@ -35,27 +39,29 @@ app.use(async (req, res, next) => {
   );
 
   const configureStoreSource = await fetch(urlPrefix + "/configureStore.js");
-  const globalReducerSource = await fetch(urlPrefix + "/globalReducer.js");
+  // const globalReducerSource = await fetch(urlPrefix + "/globalReducer.js");
 
   const moduleObj = requireFromString(moduleSource);
   const configureStore = requireFromString(configureStoreSource).default;
-  const globalReducer = requireFromString(globalReducerSource).default;
+  // const globalReducer = requireFromString(globalReducerSource).default;
 
-  // TODO: Gather initials task from API server
-  // const globalActionTypes = requireFromString(globalReducerSource).ActionTypes;
-  // const globalData = await fetch(API_SERVER + "/global", undefined, true);
-  // console.log(globalData);
+  // Gather initials task from API server
 
   req.store = configureStore();
-  if (moduleObj.rootReducer)
-    req.store.attachReducers({ [moduleName]: moduleObj.rootReducer });
+  if (moduleObj.reducer) {
+    req.store.attachReducers({ [moduleName]: moduleObj.reducer });
 
-  req.store.attachReducers({ globalData: globalReducer });
+    if (req.body.api) {
+      const actionTypes = moduleObj.ActionTypes;
+      const data = await fetch(API_SERVER + req.body.api, undefined, true);
+      req.store.dispatch({
+        type: actionTypes.INIT,
+        state: { [moduleName]: data }
+      });
+    }
+  }
 
-  // req.store.dispatch({
-  //   type: globalActionTypes.INIT_GLOBAL_DATA,
-  //   state: globalData
-  // });
+  // req.store.attachReducers({ globalData: globalReducer });
 
   req.moduleObj = moduleObj;
   req.moduleManifest = moduleManifest;

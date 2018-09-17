@@ -2,13 +2,7 @@
 /* eslint-disable react/no-danger */
 import React from "react";
 
-type PropsT = {
-  children: *,
-  state: string,
-  id: string
-};
-
-export default class Wrapper extends React.Component<PropsT> {
+export default class Wrapper extends React.Component {
   static defaultProps = {
     css: [],
     scripts: [],
