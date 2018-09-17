@@ -2,7 +2,7 @@
 
 ## module-resolver
 
-To start server on port 8001
+To start server on port 8000
 
 ```
 yarn start
