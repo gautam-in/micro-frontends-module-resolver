@@ -6,7 +6,10 @@ import { SubspaceProvider } from "react-redux-subspace";
 export default async (req, moduleName) => {
   return renderToString(
     <Provider store={req.store}>
-      <SubspaceProvider mapState={state => state[moduleName] || {}}>
+      <SubspaceProvider
+        mapState={state => state[moduleName] || {}}
+        namespace={moduleName}
+      >
         {React.createElement(req.moduleObj.default)}
       </SubspaceProvider>
     </Provider>

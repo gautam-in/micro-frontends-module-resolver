@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import serverRenderer from "./moduleRenderer";
 import fetch from "./fetch";
 import requireFromString from "require-from-string";
+import { namespaced, namespacedAction } from "redux-subspace";
 
 const urlPrefix = "http://localhost:8002/shared";
 const API_SERVER = "http://localhost:8003";
@@ -49,15 +50,19 @@ app.use(async (req, res, next) => {
 
   req.store = configureStore();
   if (moduleObj.reducer) {
-    req.store.attachReducers({ [moduleName]: moduleObj.reducer });
+    req.store.attachReducers({
+      [moduleName]: namespaced(moduleName)(moduleObj.reducer)
+    });
 
     if (req.body.api) {
       const actionTypes = moduleObj.ActionTypes;
       const data = await fetch(API_SERVER + req.body.api, undefined, true);
-      req.store.dispatch({
-        type: actionTypes.INIT,
-        state: { [moduleName]: data }
-      });
+      req.store.dispatch(
+        namespacedAction(moduleName)({
+          type: actionTypes.INIT,
+          state: { [moduleName]: data }
+        })
+      );
     }
   }
 
