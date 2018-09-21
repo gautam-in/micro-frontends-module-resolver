@@ -10,10 +10,14 @@ export default class Wrapper extends React.Component {
   };
 
   render() {
-    const { children, state, id } = this.props;
+    const { children, state, id, clientOnly } = this.props;
+    console.log(clientOnly);
     return (
       <div>
-        <div id={id} dangerouslySetInnerHTML={{ __html: children }} />
+        <div
+          id={id}
+          dangerouslySetInnerHTML={{ __html: clientOnly ? "" : children }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.__PRELOADED_STATE__ = 

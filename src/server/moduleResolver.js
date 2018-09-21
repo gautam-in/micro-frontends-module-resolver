@@ -7,7 +7,7 @@ export default async (req, moduleName) => {
   return renderToString(
     <Provider store={req.store}>
       <SubspaceProvider
-        mapState={state => state[moduleName] || {}}
+        mapState={state => ({ ...state[moduleName], rootState: state } || {})}
         namespace={moduleName}
       >
         {React.createElement(req.moduleObj.default)}

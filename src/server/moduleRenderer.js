@@ -38,7 +38,7 @@ const serverRenderer = () => async (req, res) => {
 
   return res.send({
     html: renderToString(
-      <Wrapper state={state} id={moduleName}>
+      <Wrapper state={state} id={moduleName} clientOnly={req.body.clientOnly}>
         {await resolver(req, moduleName)}
       </Wrapper>
     ),
