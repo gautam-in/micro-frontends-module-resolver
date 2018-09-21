@@ -11,7 +11,6 @@ export default class Wrapper extends React.Component {
 
   render() {
     const { children, state, id, clientOnly } = this.props;
-    console.log(clientOnly);
     return (
       <div>
         <div
