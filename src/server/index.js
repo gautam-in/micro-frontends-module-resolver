@@ -28,7 +28,6 @@ app.use(bodyParser.json());
 
 app.use(async (req, res, next) => {
   const moduleName = req.path.split("/")[1];
-
   const moduleManifest = await fetch(
     urlPrefix + "/" + moduleName.toLowerCase() + ".manifest.json",
     undefined,

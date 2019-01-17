@@ -35,11 +35,12 @@ const serverRenderer = () => async (req, res) => {
   if (req.moduleManifest[moduleNameLowerCase + ".js"]) {
     js.push(urlPrefix + "/" + req.moduleManifest[moduleNameLowerCase + ".js"]);
   }
-
+  //console.log(req.moduleObj.default)
   return res.send({
     html: renderToString(
       <Wrapper state={state} id={moduleName} clientOnly={req.body.clientOnly}>
-        {await resolver(req, moduleName)}
+        {(await resolver(req, moduleName)).html}
+        {console.log((await resolver(req, moduleName)).html)}
       </Wrapper>
     ),
     css,
