@@ -11,8 +11,6 @@ export default async (req, moduleName) => {
       font-size:1rem;
       color: red;
     `;
-    console.log(Text);
-    console.log(renderToString(<Provider store={req.store}>{React.createElement(req.moduleObj.default)}</Provider>));
   const html =  renderToString(
     <StyleSheetManager sheet={sheet.instance}>
       <Provider store={req.store}>

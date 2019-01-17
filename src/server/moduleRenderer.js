@@ -40,7 +40,6 @@ const serverRenderer = () => async (req, res) => {
     html: renderToString(
       <Wrapper state={state} id={moduleName} clientOnly={req.body.clientOnly}>
         {(await resolver(req, moduleName)).html}
-        {console.log((await resolver(req, moduleName)).html)}
       </Wrapper>
     ),
     css,
