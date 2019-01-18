@@ -33,7 +33,6 @@ app.use(async (req, res, next) => {
     undefined,
     true
   );
-
   const moduleSource = await fetch(
     urlPrefix + "/" + moduleManifest[moduleName.toLowerCase() + ".js"]
   );

@@ -36,13 +36,15 @@ const serverRenderer = () => async (req, res) => {
     js.push(urlPrefix + "/" + req.moduleManifest[moduleNameLowerCase + ".js"]);
   }
   //console.log(req.moduleObj.default)
+  const renderedComponent = await resolver(req, moduleName);
+  const rendered = renderToString(
+    <Wrapper state={state} id={moduleName} clientOnly={req.body.clientOnly}>
+      {renderedComponent.html}
+    </Wrapper>
+  );
   return res.send({
-    html: renderToString(
-      <Wrapper state={state} id={moduleName} clientOnly={req.body.clientOnly}>
-        {(await resolver(req, moduleName)).html}
-        {console.log((await resolver(req, moduleName)).html)}
-      </Wrapper>
-    ),
+    html: '<div>' + rendered + renderedComponent.styles + '</div>',
+    styles: renderedComponent.styles,
     css,
     js
   });
